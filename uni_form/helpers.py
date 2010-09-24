@@ -100,16 +100,18 @@ class Layout(object):
     ...         'company'))
     >>> helper.add_layout(layout)
     '''
-    def __init__(self, *fields):
+    def __init__(self, *fields, **kwargs):
         self.fields = fields
-    
+        self.auto_include = kwargs.get('auto_include',True)
+
     def render(self, form):
         html = ""
         for field in self.fields:
             html += render_field(field, form)
-        for field in form.fields.keys():
-            if not field in form.rendered_fields:
-                html += render_field(field, form)
+        if self.auto_include:
+            for field in form.fields.keys():
+                if not field in form.rendered_fields:
+                    html += render_field(field, form)
         return html
 
 class Fieldset(object):

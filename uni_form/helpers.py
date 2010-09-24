@@ -100,16 +100,18 @@ class Layout(object):
     ...         'company'))
     >>> helper.add_layout(layout)
     '''
-    def __init__(self, *fields):
+    def __init__(self, *fields, **kwargs):
         self.fields = fields
-    
+        self.auto_include = kwargs.get('auto_include',True)
+
     def render(self, form):
         html = ""
         for field in self.fields:
             html += render_field(field, form)
-        for field in form.fields.keys():
-            if not field in form.rendered_fields:
-                html += render_field(field, form)
+        if self.auto_include:
+            for field in form.fields.keys():
+                if not field in form.rendered_fields:
+                    html += render_field(field, form)
         return html
 
 class Fieldset(object):
@@ -179,6 +181,17 @@ class MultiField(object):
 
 
 
+class Exclude(object):
+    """ Don't render these fields. """
+    def __init__(self, *fields, **kwargs):
+        self.fields = fields
+        self.css = kwargs.get('css_class', u'formRow')
+
+    def render(self, form):
+        return u''
+
+
+
 class Row(object):
     ''' row container. Renders to a set of <div>'''
     def __init__(self, *fields, **kwargs):
@@ -186,7 +199,8 @@ class Row(object):
         self.css = kwargs.get('css_class', u'formRow')
 
     def render(self, form):
-        output = u'<div class="%s">' % self.css
+        total_fields = len(self.fields)
+        output = u'<div class="%s total_%s">' % (self.css, total_fields)
         for field in self.fields:
             output += render_field(field, form)
         output += u'</div>'

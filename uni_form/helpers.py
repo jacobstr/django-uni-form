@@ -179,6 +179,17 @@ class MultiField(object):
 
 
 
+class Exclude(object):
+    """ Don't render these fields. """
+    def __init__(self, *fields, **kwargs):
+        self.fields = fields
+        self.css = kwargs.get('css_class', u'formRow')
+
+    def render(self, form):
+        return u''
+
+
+
 class Row(object):
     ''' row container. Renders to a set of <div>'''
     def __init__(self, *fields, **kwargs):
@@ -186,7 +197,8 @@ class Row(object):
         self.css = kwargs.get('css_class', u'formRow')
 
     def render(self, form):
-        output = u'<div class="%s">' % self.css
+        total_fields = len(self.fields)
+        output = u'<div class="%s total_%s">' % (self.css, total_fields)
         for field in self.fields:
             output += render_field(field, form)
         output += u'</div>'

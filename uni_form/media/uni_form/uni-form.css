@@ -152,3 +152,5 @@
 /* Columns */
 .uniForm .col{ float: left; }
 .uniForm .col{ width: 50%; }
+
+.uniForm .formHidden { display: none }

@@ -45,14 +45,6 @@ class Button(BaseInput):
     input_type = 'button'
     field_classes = 'button'
 
-class Hidden(BaseInput):
-    """
-        Used to create a Hidden input descriptor for the uni_form template tag.
-    """
-    
-    input_type = 'hidden'
-    field_classes = 'hidden'
-
 class Reset(BaseInput):
     """
         Used to create a Hidden input descriptor for the uni_form template tag.
@@ -135,6 +127,19 @@ class Fieldset(object):
         html += u'</fieldset>'
         return html
 
+
+class Hidden(object):
+    ''' row container. Renders to a set of <div>'''
+    def __init__(self, *fields, **kwargs):
+        self.fields = fields
+        self.css = kwargs.get('css_class', u'formHidden')
+
+    def render(self, form):
+        output = u'<div class="%s">' % (self.css, )
+        for field in self.fields:
+            output += render_field(field, form)
+        output += u'</div>'
+        return u''.join(output)
 
 
 class MultiField(object):

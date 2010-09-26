@@ -303,10 +303,14 @@ class FormHelper(object):
     use_csrf_protection = True
 
     
-    def __init__(self):
+    def __init__(self, form_class='', form_id='', form_tag=True):
         
         self.inputs = self.inputs[:]
         self.toggle = Toggle()
+        
+        self.form_class = form_class
+        self.form_id = form_id
+        self.form_tag = form_tag
     
     def get_form_method(self):
         return self._form_method
